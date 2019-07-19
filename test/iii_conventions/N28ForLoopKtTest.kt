@@ -1,7 +1,6 @@
 package iii_conventions
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -17,6 +16,13 @@ class N28ForLoopKtTest {
         val expectedDateRange = arrayListOf(
             MyDate(2014, 5, 1), MyDate(2014, 5, 2), MyDate(2014, 5, 3), MyDate(2014, 5, 4), MyDate(2014, 5, 5))
         assertEquals(expectedDateRange, actualDateRange, "Incorrect iteration over five nice spring dates")
+    }
+
+    @Test
+    fun `generateSequence returns an empty sequence if the function returns null at first`() {
+        val theSequence = generateSequence<Int>(null, { null } ).toList()
+        assertEquals(emptyList<Int>(), theSequence)
+        assertTrue(theSequence.isEmpty(), "sequence should have been empty")
     }
 
     @Test

@@ -17,18 +17,24 @@ enum class TimeInterval {
 }
 
 class DateRange(val start: MyDate, val endInclusive: MyDate): Iterable<MyDate> {
-    override fun iterator(): Iterator<MyDate> = DateIterator(this)
+    override fun iterator(): Iterator<MyDate> =  getSequence().iterator() //DateIterator(this)
     operator fun contains(item: MyDate): Boolean = start <= item && item <= endInclusive
+
+    fun getSequence(): Sequence<MyDate> {
+        return generateSequence(
+                seed = start.takeIf { start <= endInclusive },
+                nextFunction = { currentDate -> currentDate.nextDay().takeIf { currentDate < endInclusive } })
+    }
 }
 
 class DateIterator(val dateRange: DateRange) : Iterator<MyDate> {
-    var startDate: MyDate = dateRange.start
+    var currentDate: MyDate = dateRange.start
     override fun next(): MyDate {
-        val result = startDate
-        startDate = startDate.nextDay()
+        val result = currentDate
+        currentDate = currentDate.nextDay()
         return result
     }
-    override fun hasNext(): Boolean = startDate <= dateRange.endInclusive
+    override fun hasNext(): Boolean = currentDate <= dateRange.endInclusive
 }
 
 operator fun MyDate.plus(timeInterval: TimeInterval) = addTimeIntervals(timeInterval, 1)
